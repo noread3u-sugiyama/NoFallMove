@@ -1,0 +1,12 @@
+name: NoFallMove
+version: 1.0.0
+main: com.example.nofallmove.NoFallMove
+api-version: '26.3'
+commands:
+  nfm:
+    description: チャンク単位の落下中横移動・クモ壁登り無効化
+    usage: /nfm <add|remove|list|reload>
+    permission: nofallmove.admin
+permissions:
+  nofallmove.admin:
+    default: op

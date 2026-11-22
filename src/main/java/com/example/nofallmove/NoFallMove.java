@@ -18,6 +18,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -96,13 +97,13 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> argList = List.of(args);
+        List<String> argList = Arrays.asList(args);
         if (argList.isEmpty()) {
             sender.sendMessage("§e使用方法: /nfm <add|remove|list|reload>");
             return true;
         }
 
-        String sub = argList.getFirst().toLowerCase(Locale.ROOT);
+        String sub = argList.get(0).toLowerCase(Locale.ROOT);
         switch (sub) {
             case "add" -> {
                 if (!(sender instanceof Player player)) {
@@ -148,9 +149,9 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        List<String> argList = List.of(args);
+        List<String> argList = Arrays.asList(args);
         if (argList.size() == 1) {
-            String input = argList.getFirst().toLowerCase(Locale.ROOT);
+            String input = argList.get(0).toLowerCase(Locale.ROOT);
             return List.of("add", "remove", "list", "reload").stream()
                     .filter(s -> s.startsWith(input))
                     .toList();

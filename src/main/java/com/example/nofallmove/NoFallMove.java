@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor, TabCompleter {
@@ -66,7 +67,6 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
         Location to = event.getTo();
         Vector vel = mob.getVelocity();
 
-        // クモ・洞窟グモの壁登り抑制（空中で上方向へ移動しようとした場合）
         if (mob instanceof Spider && !mob.isOnGround()) {
             if (to.getY() > from.getY() || vel.getY() > 0.05) {
                 mob.getPathfinder().stopPathfinding();
@@ -79,7 +79,6 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
             }
         }
 
-        // 落下中の横移動・戻り移動を無効化
         if (!mob.isOnGround() && (mob.getFallDistance() > 0.25f || vel.getY() < -0.12)) {
             mob.getPathfinder().stopPathfinding();
 
@@ -97,12 +96,14 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 0) {
+        List<String> argList = List.of(args);
+        if (argList.isEmpty()) {
             sender.sendMessage("§e使用方法: /nfm <add|remove|list|reload>");
             return true;
         }
 
-        switch (args.toLowerCase()) {
+        String sub = argList.getFirst().toLowerCase(Locale.ROOT);
+        switch (sub) {
             case "add" -> {
                 if (!(sender instanceof Player player)) {
                     sender.sendMessage("§cプレイヤーのみ実行できます。");
@@ -147,9 +148,11 @@ public class NoFallMove extends JavaPlugin implements Listener, CommandExecutor,
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) {
+        List<String> argList = List.of(args);
+        if (argList.size() == 1) {
+            String input = argList.getFirst().toLowerCase(Locale.ROOT);
             return List.of("add", "remove", "list", "reload").stream()
-                    .filter(s -> s.startsWith(args.toLowerCase()))
+                    .filter(s -> s.startsWith(input))
                     .toList();
         }
         return List.of();
